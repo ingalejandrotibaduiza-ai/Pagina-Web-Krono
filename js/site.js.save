@@ -1,0 +1,36 @@
+document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+const menuBtn = document.getElementById("menuBtn");
+const drawer = document.getElementById("drawer");
+
+if (menuBtn && drawer) {  menuBtn.addEventListener("click", () => drawer.classList.toggle("show"));
+  drawer.querySelectorAll("a").forEach(a => {
+    a.addEventListener("click", () => drawer.classList.remove("show"));
+  });
+}
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add("is-in");
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+const copyEmailBtn = document.getElementById("copyEmail");
+const emailText = document.getElementById("emailText");
+
+if (copyEmailBtn && emailText) {
+  copyEmailBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(emailText.textContent.trim());
+      copyEmailBtn.textContent = "¡Copiado!";
+      setTimeout(() => (copyEmailBtn.textContent = "Copiar email"), 900);
+    } catch {
+      copyEmailBtn.textContent = "No se pudo";
+      setTimeout(() => (copyEmailBtn.textContent = "Copiar email"), 900);
+    }
+  });
+}
+
