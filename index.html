@@ -10,9 +10,199 @@
 </head>
 
 <body>
-  <a class="wa-float" href="https://wa.link/zx1j4t" target="_blank" rel="noreferrer" aria-label="WhatsApp">
-    💬
-  </a>
+  <div class="chat-backdrop" id="chatBackdrop" aria-hidden="true"></div>
+
+  <aside class="chat-widget" id="chatWidget" aria-hidden="true">
+    <header class="chat-head">
+      <div class="chat-title">
+        <span class="chat-dot"></span>
+        <div>
+          <div class="chat-name">Krono Bot</div>
+          <div class="chat-sub">Responde al instante</div>
+        </div>
+      </div>
+
+      <div class="chat-robot" aria-hidden="true">
+        <svg class="bot3d bot3d--mini" viewBox="0 0 220 220" aria-hidden="true">
+          <defs>
+            <radialGradient id="gHead-sm" cx="35%" cy="25%" r="70%">
+              <stop offset="0%" stop-color="rgba(255,255,255,.85)"/>
+              <stop offset="30%" stop-color="rgba(255,255,255,.18)"/>
+              <stop offset="60%" stop-color="rgba(125,211,252,.22)"/>
+              <stop offset="100%" stop-color="rgba(59,130,246,.08)"/>
+            </radialGradient>
+
+            <linearGradient id="gMetal-sm" x1="0" x2="1">
+              <stop offset="0%" stop-color="rgba(148,163,184,.25)"/>
+              <stop offset="40%" stop-color="rgba(34,211,238,.22)"/>
+              <stop offset="100%" stop-color="rgba(167,139,250,.18)"/>
+            </linearGradient>
+
+            <linearGradient id="gNeon-sm" x1="0" x2="1">
+              <stop offset="0%" stop-color="#22d3ee"/>
+              <stop offset="50%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#34d399"/>
+            </linearGradient>
+
+            <filter id="shadow-sm" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="rgba(0,0,0,.55)"/>
+              <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="rgba(34,211,238,.22)"/>
+            </filter>
+
+            <filter id="glow-sm" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="3" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <g class="bot3d__float" filter="url(#shadow-sm)">
+            <ellipse cx="110" cy="195" rx="62" ry="14" fill="rgba(0,0,0,.25)"/>
+
+            <g class="bot3d__arm">
+              <path d="M165 126 C190 120, 200 140, 184 154 C175 162, 160 160, 152 152"
+                    fill="none" stroke="rgba(233,238,252,.22)" stroke-width="16" stroke-linecap="round"/>
+              <path d="M152 152 C162 148, 176 148, 185 154"
+                    fill="none" stroke="url(#gNeon-sm)" stroke-width="6" stroke-linecap="round" filter="url(#glow-sm)"/>
+              <path class="bot3d__finger" d="M188 154 L206 154" stroke="rgba(233,238,252,.45)" stroke-width="10" stroke-linecap="round"/>
+              <path class="bot3d__finger" d="M198 145 L210 138" stroke="rgba(233,238,252,.35)" stroke-width="8" stroke-linecap="round"/>
+            </g>
+
+            <g class="bot3d__body">
+              <path d="M70 136 C70 112, 150 112, 150 136 L150 164 C150 178, 70 178, 70 164 Z"
+                    fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.10)" stroke-width="2"/>
+              <path d="M78 132 C78 118, 142 118, 142 132" fill="none" stroke="url(#gMetal-sm)" stroke-width="10" stroke-linecap="round"/>
+              <rect x="92" y="148" width="36" height="10" rx="6" fill="rgba(233,238,252,.18)"/>
+              <rect x="92" y="148" width="36" height="10" rx="6" fill="url(#gNeon-sm)" opacity=".55" filter="url(#glow-sm)"/>
+            </g>
+
+            <g class="bot3d__head">
+              <path d="M66 46 C66 26, 154 26, 154 46 L154 100 C154 122, 66 122, 66 100 Z"
+                    fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.12)" stroke-width="2"/>
+              <path d="M66 46 C66 26, 154 26, 154 46 L154 100 C154 122, 66 122, 66 100 Z"
+                    fill="url(#gHead-sm)" opacity=".9"/>
+
+              <path d="M75 52 C85 36, 120 34, 146 46" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="8" stroke-linecap="round" opacity=".8"/>
+
+              <g class="bot3d__eyes" filter="url(#glow-sm)">
+                <ellipse class="eye left" cx="92" cy="78" rx="12" ry="10" fill="rgba(6,16,24,.75)"/>
+                <ellipse class="eye right" cx="128" cy="78" rx="12" ry="10" fill="rgba(6,16,24,.75)"/>
+                <circle class="pupil left" cx="92" cy="78" r="5" fill="url(#gNeon-sm)"/>
+                <circle class="pupil right" cx="128" cy="78" r="5" fill="url(#gNeon-sm)"/>
+              </g>
+
+              <path class="bot3d__mouth" d="M96 98 C106 108, 114 108, 124 98" fill="none" stroke="rgba(233,238,252,.28)" stroke-width="6" stroke-linecap="round"/>
+              <path class="bot3d__mouth" d="M96 98 C106 108, 114 108, 124 98" fill="none" stroke="url(#gNeon-sm)" stroke-width="3" stroke-linecap="round" opacity=".7" filter="url(#glow-sm)"/>
+
+              <circle cx="68" cy="60" r="6" fill="rgba(239,68,68,.55)"/>
+              <circle cx="154" cy="60" r="6" fill="rgba(34,197,94,.55)"/>
+            </g>
+
+            <path class="bot3d__spark" d="M40 140 C30 120, 46 104, 62 112" fill="none" stroke="url(#gNeon-sm)" stroke-width="4" stroke-linecap="round" opacity=".55" filter="url(#glow-sm)"/>
+          </g>
+        </svg>
+      </div>
+
+      <button class="chat-close" id="chatClose" type="button" aria-label="Cerrar">✕</button>
+    </header>
+
+    <div class="chat-body" id="chatBody"></div>
+
+    <div class="chat-quick" id="chatQuick"></div>
+
+    <form class="chat-form" id="chatForm">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Escribe aquí..." autocomplete="off" />
+      <button class="chat-send" type="submit">Enviar</button>
+    </form>
+  </aside>
+
+  <div class="bot-float" aria-hidden="true">
+    <svg class="bot3d bot3d--lg" viewBox="0 0 220 220" aria-hidden="true">
+      <defs>
+        <radialGradient id="gHead-lg" cx="35%" cy="25%" r="70%">
+          <stop offset="0%" stop-color="rgba(255,255,255,.85)"/>
+          <stop offset="30%" stop-color="rgba(255,255,255,.18)"/>
+          <stop offset="60%" stop-color="rgba(125,211,252,.22)"/>
+          <stop offset="100%" stop-color="rgba(59,130,246,.08)"/>
+        </radialGradient>
+
+        <linearGradient id="gMetal-lg" x1="0" x2="1">
+          <stop offset="0%" stop-color="rgba(148,163,184,.25)"/>
+          <stop offset="40%" stop-color="rgba(34,211,238,.22)"/>
+          <stop offset="100%" stop-color="rgba(167,139,250,.18)"/>
+        </linearGradient>
+
+        <linearGradient id="gNeon-lg" x1="0" x2="1">
+          <stop offset="0%" stop-color="#22d3ee"/>
+          <stop offset="50%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#34d399"/>
+        </linearGradient>
+
+        <filter id="shadow-lg" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="rgba(0,0,0,.55)"/>
+          <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="rgba(34,211,238,.22)"/>
+        </filter>
+
+        <filter id="glow-lg" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="3" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <g class="bot3d__float" filter="url(#shadow-lg)">
+        <ellipse cx="110" cy="195" rx="62" ry="14" fill="rgba(0,0,0,.25)"/>
+
+        <g class="bot3d__arm">
+          <path d="M165 126 C190 120, 200 140, 184 154 C175 162, 160 160, 152 152"
+                fill="none" stroke="rgba(233,238,252,.22)" stroke-width="16" stroke-linecap="round"/>
+          <path d="M152 152 C162 148, 176 148, 185 154"
+                fill="none" stroke="url(#gNeon-lg)" stroke-width="6" stroke-linecap="round" filter="url(#glow-lg)"/>
+          <path class="bot3d__finger" d="M188 154 L206 154" stroke="rgba(233,238,252,.45)" stroke-width="10" stroke-linecap="round"/>
+          <path class="bot3d__finger" d="M198 145 L210 138" stroke="rgba(233,238,252,.35)" stroke-width="8" stroke-linecap="round"/>
+        </g>
+
+        <g class="bot3d__body">
+          <path d="M70 136 C70 112, 150 112, 150 136 L150 164 C150 178, 70 178, 70 164 Z"
+                fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.10)" stroke-width="2"/>
+          <path d="M78 132 C78 118, 142 118, 142 132" fill="none" stroke="url(#gMetal-lg)" stroke-width="10" stroke-linecap="round"/>
+          <rect x="92" y="148" width="36" height="10" rx="6" fill="rgba(233,238,252,.18)"/>
+          <rect x="92" y="148" width="36" height="10" rx="6" fill="url(#gNeon-lg)" opacity=".55" filter="url(#glow-lg)"/>
+        </g>
+
+        <g class="bot3d__head">
+          <path d="M66 46 C66 26, 154 26, 154 46 L154 100 C154 122, 66 122, 66 100 Z"
+                fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.12)" stroke-width="2"/>
+          <path d="M66 46 C66 26, 154 26, 154 46 L154 100 C154 122, 66 122, 66 100 Z"
+                fill="url(#gHead-lg)" opacity=".9"/>
+
+          <path d="M75 52 C85 36, 120 34, 146 46" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="8" stroke-linecap="round" opacity=".8"/>
+
+          <g class="bot3d__eyes" filter="url(#glow-lg)">
+            <ellipse class="eye left" cx="92" cy="78" rx="12" ry="10" fill="rgba(6,16,24,.75)"/>
+            <ellipse class="eye right" cx="128" cy="78" rx="12" ry="10" fill="rgba(6,16,24,.75)"/>
+            <circle class="pupil left" cx="92" cy="78" r="5" fill="url(#gNeon-lg)"/>
+            <circle class="pupil right" cx="128" cy="78" r="5" fill="url(#gNeon-lg)"/>
+          </g>
+
+          <path class="bot3d__mouth" d="M96 98 C106 108, 114 108, 124 98" fill="none" stroke="rgba(233,238,252,.28)" stroke-width="6" stroke-linecap="round"/>
+          <path class="bot3d__mouth" d="M96 98 C106 108, 114 108, 124 98" fill="none" stroke="url(#gNeon-lg)" stroke-width="3" stroke-linecap="round" opacity=".7" filter="url(#glow-lg)"/>
+
+          <circle cx="68" cy="60" r="6" fill="rgba(239,68,68,.55)"/>
+          <circle cx="154" cy="60" r="6" fill="rgba(34,197,94,.55)"/>
+        </g>
+
+        <path class="bot3d__spark" d="M40 140 C30 120, 46 104, 62 112" fill="none" stroke="url(#gNeon-lg)" stroke-width="4" stroke-linecap="round" opacity=".55" filter="url(#glow-lg)"/>
+      </g>
+    </svg>
+  </div>
+
+  <button class="wa-float" id="chatToggle" type="button" aria-label="Abrir chat" data-whatsapp="https://wa.link/zx1j4t">💬</button>
+
   <div class="bg-glow" aria-hidden="true"></div>
 
   <header class="nav">
@@ -100,8 +290,11 @@
       <p class="p">Lo que puedo construir para ti (o tu empresa).</p>
 
       <div class="grid3 reveal">
-        <article class="card">
-          <h3>Webs Premium</h3>
+        <article class="card service">
+          <div class="service-top">
+            <span class="service-ico">🌐</span>
+            <h3>Webs Premium</h3>
+          </div>
           <p>Landing pages, portafolios y sitios corporativos con diseño llamativo.</p>
           <ul>
             <li>Responsive</li>
@@ -110,8 +303,11 @@
           </ul>
         </article>
 
-        <article class="card">
-          <h3>Sistemas Web</h3>
+        <article class="card service">
+          <div class="service-top">
+            <span class="service-ico">🧩</span>
+            <h3>Sistemas Web</h3>
+          </div>
           <p>Paneles, dashboards, formularios, autenticación y CRUD.</p>
           <ul>
             <li>Roles</li>
@@ -120,8 +316,11 @@
           </ul>
         </article>
 
-        <article class="card">
-          <h3>Automatización</h3>
+        <article class="card service">
+          <div class="service-top">
+            <span class="service-ico">🤖</span>
+            <h3>Automatización</h3>
+          </div>
           <p>Bots y scripts para tareas repetitivas, reportes e integraciones.</p>
           <ul>
             <li>Ahorro de tiempo</li>
@@ -136,27 +335,33 @@
       <h2 class="h2">Proceso</h2>
       <p class="p">Así trabajamos para entregarte rápido, claro y sin enredos.</p>
 
-      <div class="grid4 reveal">
-        <article class="card">
+      <div class="grid4 process-grid reveal" id="processGrid">
+        <article class="card process-card" tabindex="0" role="button" aria-pressed="false" data-step="1">
           <h3>1) Brief</h3>
           <p>Me cuentas qué necesitas, público objetivo y estilo. Definimos alcance y tiempos.</p>
         </article>
 
-        <article class="card">
+        <article class="card process-card" tabindex="0" role="button" aria-pressed="false" data-step="2">
           <h3>2) Diseño</h3>
           <p>Te presento una propuesta visual moderna. Ajustamos hasta que quede perfecto.</p>
         </article>
 
-        <article class="card">
+        <article class="card process-card" tabindex="0" role="button" aria-pressed="false" data-step="3">
           <h3>3) Desarrollo</h3>
           <p>Construyo el sitio/app con buena estructura, rendimiento y responsive real.</p>
         </article>
 
-        <article class="card">
+        <article class="card process-card" tabindex="0" role="button" aria-pressed="false" data-step="4">
           <h3>4) Entrega</h3>
           <p>Publicación y pruebas finales. Te dejo guía básica para actualizar contenido.</p>
         </article>
       </div>
+
+      <div class="process-meter" aria-hidden="true">
+        <div class="process-meter-fill" id="processFill"></div>
+      </div>
+
+      <p class="process-hint">Tip: haz clic en cada paso 👇</p>
 
       <div class="cta-row reveal">
         <a class="btn" href="#contacto">Empezar ahora</a>
@@ -207,75 +412,75 @@
         <span class="pill2">Deploy</span>
       </div>
     </section>
+
     <section id="testimonios" class="section">
-  <h2 class="h2">Testimonios</h2>
-  <p class="p">Lo que dicen clientes y aliados después de trabajar conmigo.</p>
+      <h2 class="h2">Testimonios</h2>
+      <p class="p">Lo que dicen clientes y aliados después de trabajar conmigo.</p>
 
-  <div class="grid2 reveal">
-    <article class="card quote">
-      <p class="quote-text">“Rápido, claro y el resultado quedó excelente. La web cargó súper bien en celular y el diseño se ve premium.”</p>
-      <div class="quote-foot">
-        <div class="avatar">A</div>
+      <div class="grid2 reveal">
+        <article class="card quote">
+          <p class="quote-text">“Rápido, claro y el resultado quedó excelente. La web cargó súper bien en celular y el diseño se ve premium.”</p>
+          <div class="quote-foot">
+            <div class="avatar">A</div>
+            <div>
+              <div class="quote-name">Cliente</div>
+              <div class="quote-role">Web / Landing</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card quote">
+          <p class="quote-text">“Me ayudó a organizar el proyecto y dejarlo listo para publicar. Muy recomendado por la paciencia y la calidad.”</p>
+          <div class="quote-foot">
+            <div class="avatar">B</div>
+            <div>
+              <div class="quote-name">Aliado</div>
+              <div class="quote-role">Sistema / Automatización</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <h2 class="h2">Preguntas frecuentes</h2>
+      <p class="p">Respuestas rápidas para que tengas todo claro.</p>
+
+      <div class="faq reveal">
+        <details class="faq-item">
+          <summary>¿Cuánto te demoras en entregar?</summary>
+          <div class="faq-body">Depende del alcance. Landing pages suelen estar listas en pocos días. Sistemas web pueden requerir más tiempo por módulos.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Incluyes dominio y hosting?</summary>
+          <div class="faq-body">Te asesoro para comprar dominio/hosting y lo dejo configurado. Si ya tienes servidor, también lo dejo publicado.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Puedo actualizar el contenido después?</summary>
+          <div class="faq-body">Sí. Te dejo el proyecto organizado y una guía simple para actualizar textos, imágenes y secciones.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Qué necesitas para empezar?</summary>
+          <div class="faq-body">Un resumen de tu negocio, objetivo de la web, referencias de estilo y tu contacto. Con eso armamos el plan.</div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="final-cta reveal">
         <div>
-          <div class="quote-name">Cliente</div>
-          <div class="quote-role">Web / Landing</div>
+          <h2 class="h2">¿Listo para construir tu web?</h2>
+          <p class="p">Cuéntame tu idea y te digo la mejor opción para hacerlo rápido y bien.</p>
+        </div>
+        <div class="final-actions">
+          <a class="btn" href="#contacto">Cotizar ahora</a>
+          <a class="btn btn-ghost" href="https://wa.link/zx1j4t" target="_blank" rel="noreferrer">WhatsApp</a>
         </div>
       </div>
-    </article>
-
-    <article class="card quote">
-      <p class="quote-text">“Me ayudó a organizar el proyecto y dejarlo listo para publicar. Muy recomendado por la paciencia y la calidad.”</p>
-      <div class="quote-foot">
-        <div class="avatar">B</div>
-        <div>
-          <div class="quote-name">Aliado</div>
-          <div class="quote-role">Sistema / Automatización</div>
-        </div>
-      </div>
-    </article>
-  </div>
-</section>
-
-<section id="faq" class="section">
-  <h2 class="h2">Preguntas frecuentes</h2>
-  <p class="p">Respuestas rápidas para que tengas todo claro.</p>
-
-  <div class="faq reveal">
-    <details class="faq-item">
-      <summary>¿Cuánto te demoras en entregar?</summary>
-      <div class="faq-body">Depende del alcance. Landing pages suelen estar listas en pocos días. Sistemas web pueden requerir más tiempo por módulos.</div>
-    </details>
-
-    <details class="faq-item">
-      <summary>¿Incluyes dominio y hosting?</summary>
-      <div class="faq-body">Te asesoro para comprar dominio/hosting y lo dejo configurado. Si ya tienes servidor, también lo dejo publicado.</div>
-    </details>
-
-    <details class="faq-item">
-      <summary>¿Puedo actualizar el contenido después?</summary>
-      <div class="faq-body">Sí. Te dejo el proyecto organizado y una guía simple para actualizar textos, imágenes y secciones.</div>
-    </details>
-
-    <details class="faq-item">
-      <summary>¿Qué necesitas para empezar?</summary>
-      <div class="faq-body">Un resumen de tu negocio, objetivo de la web, referencias de estilo y tu contacto. Con eso armamos el plan.</div>
-    </details>
-  </div>
-</section>
-
-<section class="section">
-  <div class="final-cta reveal">
-    <div>
-      <h2 class="h2">¿Listo para construir tu web?</h2>
-      <p class="p">Cuéntame tu idea y te digo la mejor opción para hacerlo rápido y bien.</p>
-    </div>
-    <div class="final-actions">
-      <a class="btn" href="#contacto">Cotizar ahora</a>
-      <a class="btn btn-ghost" href="https://wa.link/zx1j4t" target="_blank" rel="noreferrer">WhatsApp</a>
-    </div>
-  </div>
-</section>
-
+    </section>
 
     <section id="contacto" class="section">
       <h2 class="h2">Contacto</h2>
@@ -313,4 +518,3 @@
   </div>
 </body>
 </html>
-
