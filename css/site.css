@@ -3,8 +3,11 @@
   --bg2:#0b0f1a;
   --card: rgba(255,255,255,.06);
   --border: rgba(255,255,255,.10);
-  --txt:#e9eefc;
-  --muted: rgba(233,238,252,.75);
+
+  /* ↓ Menos “luminosa” la letra */
+  --txt: rgba(233,238,252,.86);
+  --muted: rgba(233,238,252,.62);
+
   --a1:#22d3ee;
   --a2:#a78bfa;
   --a3:#34d399;
@@ -20,6 +23,10 @@ body{
   background: radial-gradient(circle at top, #1b2a4a, var(--bg2));
   font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   overflow-x:hidden;
+
+  /* ↓ Mejor lectura */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .bg-glow{
@@ -275,23 +282,7 @@ body{
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
-.project-top{
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-}
-.badge{
-  padding:6px 10px;
-  border-radius:999px;
-  background: linear-gradient(90deg, rgba(34,211,238,.25), rgba(167,139,250,.25));
-  border: 1px solid rgba(255,255,255,.10);
-  color: var(--txt);
-  font-weight:800;
-  font-size: 12px;
-}
-.badge.ghost{
-  background: rgba(255,255,255,.06);
-  color: var(--muted);
-}
-.project-actions{ display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap; }
+/* (Se borró CSS de Proyectos y Testimonios, como pediste) */
 
 .stack{
   margin-top: 14px;
@@ -490,18 +481,6 @@ body{
   flex-wrap: wrap;
   align-items: center;
 }
-
-.quote-text{ margin:0; color: rgba(233,238,252,.82); line-height: 1.6; }
-.quote-foot{ display:flex; align-items:center; gap: 10px; margin-top: 12px; }
-.avatar{
-  width: 36px; height: 36px; border-radius: 999px;
-  display:flex; align-items:center; justify-content:center;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.10);
-  font-weight: 900;
-}
-.quote-name{ font-weight: 900; }
-.quote-role{ color: rgba(233,238,252,.70); font-size: 12px; margin-top: 2px; }
 
 .faq{ margin-top: 14px; display:grid; gap: 10px; }
 .faq-item{
@@ -898,3 +877,16 @@ body{
 }
 
 .wa-float:hover{ transform: translateY(-2px); }
+
+/* ===== Ajuste extra de lectura (sin quitar estilos) ===== */
+.subtitle{ line-height: 1.65; }
+.p{ line-height: 1.65; }
+.card p{ line-height: 1.65; }
+
+.title, .h2{
+  text-shadow: 0 8px 26px rgba(0,0,0,.35);
+}
+
+.msg{
+  color: rgba(233,238,252,.82);
+}
