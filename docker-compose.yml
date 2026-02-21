@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16
+    container_name: krono_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: krono_bot
+      POSTGRES_USER: krono_app
+      POSTGRES_PASSWORD: 2468Tiba
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  pgdata:

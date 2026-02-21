@@ -1,25 +1,108 @@
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
+const API_BASE = (() => {
+  // Codespaces: https://xxxx-5500.app.github.dev -> https://xxxx-3001.app.github.dev
+  if (location.hostname.endsWith("app.github.dev")) {
+    return location.origin.replace(/-\d+\.app\.github\.dev$/, "-3001.app.github.dev");
+  }
+  // Local
+  return "http://localhost:3001";
+})();
+
+fetch(`${API_BASE}/api/health`)
+  .then((r) => r.json())
+  .then((d) => console.log("API health:", d))
+  .catch((err) => console.error("API health error:", err));
+
+
+const SESSION_KEY = "krono_session_id";
+
+function getSessionId() {
+  let id = localStorage.getItem(SESSION_KEY);
+  if (!id) {
+    id =
+      (crypto?.randomUUID?.() ||
+        `sid_${Date.now()}_${Math.random().toString(16).slice(2)}`);
+    localStorage.setItem(SESSION_KEY, id);
+  }
+  return id;
+}
+
+const SESSION_ID = getSessionId();
+let CONVERSACION_ID = null;
+let CONVERSACION_PROMISE = null;
+
+async function ensureConversation() {
+  if (CONVERSACION_ID) return CONVERSACION_ID;
+  if (CONVERSACION_PROMISE) return CONVERSACION_PROMISE;
+
+  CONVERSACION_PROMISE = fetch(`${API_BASE}/api/conversaciones`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ session_id: SESSION_ID }),
+  })
+    .then((r) => r.json())
+    .then((d) => {
+      CONVERSACION_ID = d?.id ?? null;
+      return CONVERSACION_ID;
+    })
+    .catch((err) => {
+      CONVERSACION_PROMISE = null;
+      console.warn("No se pudo crear conversación:", err);
+      return null;
+    });
+
+  return CONVERSACION_PROMISE;
+}
+
+async function saveMessage(quien, texto) {
+  try {
+    const cid = await ensureConversation();
+    if (!cid) return;
+
+    await fetch(`${API_BASE}/api/mensajes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ conversacion_id: cid, quien, texto }),
+    });
+  } catch (err) {
+    console.warn("No se pudo guardar mensaje:", err);
+  }
+}
+
+// ==========================
+// Year
+// ==========================
 const yearEl = $("#year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+// ==========================
+// Drawer menu
+// ==========================
 const menuBtn = $("#menuBtn");
 const drawer = $("#drawer");
+
 if (menuBtn && drawer) {
   const toggleDrawer = () => drawer.classList.toggle("show");
   menuBtn.addEventListener("click", toggleDrawer);
+
   drawer.addEventListener("click", (e) => {
     if (e.target && e.target.matches("a")) drawer.classList.remove("show");
   });
+
   document.addEventListener("click", (e) => {
     const inside = drawer.contains(e.target) || menuBtn.contains(e.target);
     if (!inside) drawer.classList.remove("show");
   });
 }
 
+// ==========================
+// Copy email
+// ==========================
 const copyBtn = $("#copyEmail");
 const emailText = $("#emailText");
+
 if (copyBtn && emailText) {
   copyBtn.addEventListener("click", async () => {
     const txt = emailText.textContent.trim();
@@ -34,7 +117,11 @@ if (copyBtn && emailText) {
   });
 }
 
+// ==========================
+// Reveal animations
+// ==========================
 const reveals = $$(".reveal");
+
 if ("IntersectionObserver" in window && reveals.length) {
   const io = new IntersectionObserver(
     (entries) => {
@@ -49,10 +136,15 @@ if ("IntersectionObserver" in window && reveals.length) {
   reveals.forEach((el) => el.classList.add("is-in"));
 }
 
+// ==========================
+// Process (meter + active card)
+// ==========================
 const processGrid = $("#processGrid");
 const processFill = $("#processFill");
+
 if (processGrid && processFill) {
   const cards = $$(".process-card", processGrid);
+
   const setStep = (n) => {
     cards.forEach((c) => {
       const active = Number(c.dataset.step) === n;
@@ -62,6 +154,7 @@ if (processGrid && processFill) {
     const pct = Math.max(0, Math.min(100, (n / 4) * 100));
     processFill.style.width = pct + "%";
   };
+
   setStep(1);
 
   const onPick = (card) => {
@@ -83,6 +176,9 @@ if (processGrid && processFill) {
   });
 }
 
+// ==========================
+// Chat elements
+// ==========================
 const chatToggle = $("#chatToggle");
 const chatBackdrop = $("#chatBackdrop");
 const chatWidget = $("#chatWidget");
@@ -101,31 +197,51 @@ function setChatOpen(isOpen) {
   chatWidget.setAttribute("aria-hidden", isOpen ? "false" : "true");
   chatBackdrop.setAttribute("aria-hidden", isOpen ? "false" : "true");
   document.documentElement.classList.toggle("chat-open", isOpen);
+
+  if (chatToggle) {
+    chatToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    chatToggle.setAttribute("aria-label", isOpen ? "Cerrar chat" : "Abrir chat");
+  }
+
   if (isOpen) setTimeout(() => chatInput?.focus(), 50);
 }
 
-function escapeHtml(str) {
-  return str.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
+function escapeHtml(input) {
+  const str = String(input ?? "");
+  return str.replace(/[&<>"']/g, (m) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  }[m]));
 }
 
 function addMsg(text, who = "bot", { html = false } = {}) {
   if (!chatBody) return;
+
   const div = document.createElement("div");
   div.className = `msg ${who === "me" ? "me" : "bot"}`;
-  div.innerHTML = html ? text : escapeHtml(text);
+  div.innerHTML = html ? String(text ?? "") : escapeHtml(text);
   chatBody.appendChild(div);
   chatBody.scrollTop = chatBody.scrollHeight;
+
+  // Guardar en DB (texto plano)
+  const plain = (div.textContent || "").trim();
+  if (plain) saveMessage(who === "me" ? "me" : "bot", plain);
 }
 
 function renderQuick() {
   if (!chatQuick) return;
   chatQuick.innerHTML = "";
+
   const options = [
     { key: "web", label: "🌐 Web premium" },
     { key: "sistema", label: "🧩 Sistema web" },
     { key: "auto", label: "🤖 Automatización" },
-    { key: "otro", label: "✨ Otro" }
+    { key: "otro", label: "✨ Otro" },
   ];
+
   options.forEach((o) => {
     const b = document.createElement("button");
     b.type = "button";
@@ -143,25 +259,40 @@ function firstBoot() {
   renderQuick();
 }
 
-function replyFor(key) {
+// replyFor: usado por quick buttons. Si el usuario escribe (submit), usamos echoMe=false
+function replyFor(key, { echoMe = true } = {}) {
   if (key === "web") {
-    addMsg("Quiero una 🌐 Web premium", "me");
+    if (echoMe) addMsg("Quiero una 🌐 Web premium", "me");
     addMsg("Perfecto. ¿Qué buscas?", "bot");
-    addMsg("• Landing de ventas\n• Portafolio\n• Web corporativa\n\nSi quieres, lo resolvemos en 3 preguntas y te paso una propuesta.", "bot");
+    addMsg(
+      "• Landing de ventas\n• Portafolio\n• Web corporativa\n\nSi quieres, lo resolvemos en 3 preguntas y te paso una propuesta.",
+      "bot"
+    );
   } else if (key === "sistema") {
-    addMsg("Necesito 🧩 Sistema web", "me");
+    if (echoMe) addMsg("Necesito 🧩 Sistema web", "me");
     addMsg("Listo. ¿Tu sistema es para…?", "bot");
-    addMsg("• Panel admin / dashboard\n• Formularios + base de datos\n• Usuarios y roles\n• Reportes\n\nCuéntame qué debe hacer y te digo el mejor camino.", "bot");
+    addMsg(
+      "• Panel admin / dashboard\n• Formularios + base de datos\n• Usuarios y roles\n• Reportes\n\nCuéntame qué debe hacer y te digo el mejor camino.",
+      "bot"
+    );
   } else if (key === "auto") {
-    addMsg("Busco 🤖 Automatización", "me");
+    if (echoMe) addMsg("Busco 🤖 Automatización", "me");
     addMsg("Genial. ¿Qué quieres automatizar?", "bot");
-    addMsg("• Respuestas / atención\n• Reportes y hojas\n• Integraciones\n• Bots de tareas\n\nDime el proceso y lo convierto en flujo simple.", "bot");
+    addMsg(
+      "• Respuestas / atención\n• Reportes y hojas\n• Integraciones\n• Bots de tareas\n\nDime el proceso y lo convierto en flujo simple.",
+      "bot"
+    );
   } else {
-    addMsg("✨ Otro", "me");
-    addMsg(`Dale. Escríbeme por WhatsApp y te respondo directo: <a href="${WA_LINK}" target="_blank" rel="noreferrer">Abrir WhatsApp</a>`, "bot", { html: true });
+    if (echoMe) addMsg("✨ Otro", "me");
+    addMsg(
+      `Dale. Escríbeme por WhatsApp y te respondo directo: <a href="${WA_LINK}" target="_blank" rel="noreferrer">Abrir WhatsApp</a>`,
+      "bot",
+      { html: true }
+    );
   }
 }
 
+// Open/close chat
 if (chatToggle && chatWidget && chatBackdrop) {
   chatToggle.addEventListener("click", () => {
     const open = !chatWidget.classList.contains("show");
@@ -177,41 +308,43 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") setChatOpen(false);
 });
 
+// Quick buttons
 if (chatQuick) {
   chatQuick.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-key]");
     if (!btn) return;
-    replyFor(btn.dataset.key);
+    replyFor(btn.dataset.key, { echoMe: true });
   });
 }
 
+// Submit (usuario escribe)
 if (chatForm && chatInput) {
   chatForm.addEventListener("submit", (e) => {
     e.preventDefault();
+
     const txt = chatInput.value.trim();
     if (!txt) return;
+
     addMsg(txt, "me");
     chatInput.value = "";
 
-    const lower = txt.toLowerCase();
-    if (lower.includes("web") || lower.includes("landing") || lower.includes("pagina")) {
-      replyFor("web");
-      return;
-    }
-    if (lower.includes("sistema") || lower.includes("panel") || lower.includes("crud") || lower.includes("dashboard")) {
-      replyFor("sistema");
-      return;
-    }
-    if (lower.includes("automat") || lower.includes("bot") || lower.includes("integr")) {
-      replyFor("auto");
-      return;
-    }
-
-    addMsg("Perfecto. Para ayudarte mejor dime:", "bot");
-    addMsg("1) ¿Qué necesitas que haga?\n2) ¿Para qué negocio?\n3) ¿Tienes ejemplo de referencia?", "bot");
-    addMsg(`Si prefieres, vamos directo por WhatsApp: <a href="${WA_LINK}" target="_blank" rel="noreferrer">Abrir WhatsApp</a>`, "bot", { html: true });
+    // Respuesta dinámica desde el backend (FAQ/IA)
+    fetch(`${API_BASE}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: txt }),
+    })
+      .then((r) => r.json())
+      .then((d) => addMsg(d.reply || "No pude responder, ¿me repites?", "bot"))
+      .catch(() => addMsg("No pude conectarme a la API 😕", "bot"));
   });
 }
+
+// ==========================
+// initProceso (lo dejo porque tú lo tenías)
+// OJO: ya existe otro controlador arriba (processGrid). Si ves cosas raras,
+// me dices y lo dejamos en 1 solo.
+// ==========================
 (function initProceso() {
   function start() {
     const cards = Array.from(document.querySelectorAll(".process-card"));
@@ -237,7 +370,6 @@ if (chatForm && chatInput) {
     cards.forEach((card, i) => {
       card.addEventListener("click", () => setActive(i));
       card.addEventListener("mouseenter", () => setActive(i));
-
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
